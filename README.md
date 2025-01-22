@@ -12,13 +12,13 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-jaxon_context = "0.1.0"
+rs_ctx = "0.1.0"
 ```
 
 Then in your code, you can use it either directly:
 
 ```rust
-use jaxon_context::background;
+use rs_ctx::background;
 ```
 
 Or through the jaxon crate (if you're using the full framework):
@@ -47,7 +47,7 @@ use jaxon::context::background;
 ### Basic Context Operations
 
 ```rust
-use jaxon_context::{background, with_value, with_cancel, with_deadline, with_timeout};
+use rs_ctx::{background, with_value, with_cancel, with_deadline, with_timeout};
 // Or if using through jaxon:
 // use jaxon::context::{background, with_value, with_cancel, with_deadline, with_timeout};
 use std::time::{Duration, Instant};
