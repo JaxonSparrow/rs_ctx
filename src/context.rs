@@ -7,7 +7,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::sync::{broadcast, RwLock};
 
-use super::{TypedKey, Context};
+use super::{TypedKey, ContextTrait};
 
 /// Context error types
 #[derive(Debug, Clone, PartialEq, thiserror::Error)]
@@ -153,7 +153,7 @@ impl ContextImpl {
     }
 }
 
-impl Context for ContextImpl {
+impl ContextTrait for ContextImpl {
     fn done(&self) -> Pin<Box<dyn Future<Output = ()> + Send + '_>> {
         let mut rx = self.cancel_tx.subscribe();
         Box::pin(async move {

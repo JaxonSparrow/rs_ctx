@@ -9,6 +9,8 @@ use std::time::{Duration, Instant};
 
 pub use context::{ContextImpl, CancelFn, ContextError};
 
+/// The Context type used throughout the crate
+pub type Context = Arc<ContextImpl>;
 
 /// A key with its type information
 #[derive(Hash, Eq, PartialEq, Clone)]
@@ -38,7 +40,7 @@ impl TypedKey {
 } 
 
 /// Base context trait defining core functionality
-pub trait Context: Send + Sync {
+pub trait ContextTrait: Send + Sync {
     /// Returns a future that completes when the context is done
     fn done(&self) -> Pin<Box<dyn Future<Output = ()> + Send + '_>>;
     
@@ -52,39 +54,38 @@ pub trait Context: Send + Sync {
     fn value<K: Hash + Eq + Clone + Send + Sync + serde::Serialize + 'static, V: Any + Send + Sync + Clone>(&self, key: &K) -> Option<Arc<V>>;
 }
 
-
 /// Create background context
-pub fn background() -> Arc<ContextImpl> {
+pub fn background() -> Context {
     ContextImpl::background()
 }
 
 /// Create context with cancel
-pub fn with_cancel(parent: &Arc<ContextImpl>) -> (Arc<ContextImpl>, CancelFn) {
+pub fn with_cancel(parent: &Context) -> (Context, CancelFn) {
     ContextImpl::with_cancel(parent)
 }
 
 /// Create context with deadline
 pub fn with_deadline(
-    parent: &Arc<ContextImpl>,
+    parent: &Context,
     deadline: Instant,
-) -> (Arc<ContextImpl>, CancelFn) {
+) -> (Context, CancelFn) {
     ContextImpl::with_deadline(parent, deadline)
 }
 
 /// Create context with timeout
 pub fn with_timeout(
-    parent: &Arc<ContextImpl>,
+    parent: &Context,
     timeout: Duration,
-) -> (Arc<ContextImpl>, CancelFn) {
+) -> (Context, CancelFn) {
     ContextImpl::with_timeout(parent, timeout)
 }
 
 /// Create context with value
 pub async fn with_value<K: Hash + Eq + Clone + Send + Sync + serde::Serialize + 'static, V: Any + Send + Sync>(
-    parent: &Arc<ContextImpl>,
+    parent: &Context,
     key: K,
     value: V,
-) -> Arc<ContextImpl> {
+) -> Context {
     ContextImpl::with_value(parent, key, value).await
 }
 
