@@ -12,13 +12,14 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rs_ctx = "0.1.0"
+rs_ctx = "0.1.2"
 ```
 
-Then in your code, you can use it either directly:
+Then in your code:
 
 ```rust
-use rs_ctx::{ Context, self as context };
+use rs_ctx::Context;
+use rs_ctx::{background, with_cancel, with_deadline, with_timeout, with_value};
 ```
 
 ## Features
@@ -41,15 +42,13 @@ use rs_ctx::{ Context, self as context };
 ### Basic Context Operations
 
 ```rust
-use rs_ctx::{background, with_value, with_cancel, with_deadline, with_timeout};
-// Or if using through jaxon:
-// use jaxon::context::{background, with_value, with_cancel, with_deadline, with_timeout};
+use rs_ctx::{Context, background, with_value, with_cancel, with_deadline, with_timeout};
 use std::time::{Duration, Instant};
 
 #[tokio::main]
 async fn main() {
     // Create a background context
-    let ctx = background();
+    let ctx: Context = background();
     assert!(ctx.err().is_none());
     assert!(ctx.deadline().is_none());
     
@@ -81,6 +80,7 @@ async fn main() {
 
 ```rust
 use serde::Serialize;
+use std::sync::Arc;
 
 // Custom key type
 #[derive(Hash, Eq, PartialEq, Clone, Serialize)]
@@ -247,7 +247,7 @@ async fn cleanup_example() {
 This crate is one of the core components of the Jaxon framework. Each component is published as a separate crate for flexibility:
 
 - `jaxon` - The main framework crate
-- `jaxon-context` - Context propagation (this crate)
+- `rs_ctx` - Context propagation (this crate)
 - `jaxon-runtime` - Async runtime utilities
 - `jaxon-macros` - Procedural macros for the framework
 - ... (other Jaxon components)
