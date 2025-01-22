@@ -18,13 +18,7 @@ rs_ctx = "0.1.0"
 Then in your code, you can use it either directly:
 
 ```rust
-use rs_ctx::background;
-```
-
-Or through the jaxon crate (if you're using the full framework):
-
-```rust
-use jaxon::context::background;
+use rs_ctx::{ Context, self as context };
 ```
 
 ## Features
